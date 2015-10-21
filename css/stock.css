@@ -1,0 +1,10 @@
+.mfp-inline-holder .mfp-content {
+ width: 50%;
+}
+
+form {
+  background-color: white;
+  width: 100%;
+  padding: 10px;
+  margin: 0 auto;
+}
