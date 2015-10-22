@@ -1,7 +1,7 @@
 <?php
 function roi($price, $value) {
   $diff = $value - $price;
-  return round($diff / $price, 2);
+  return round($diff / $price, 2) * 100;
 }
 
 $total_price = 0;
