@@ -16,19 +16,24 @@ function popupSellForm(){
   });
 }
 
-function update_list(){
+function updateListMembers(){
   $.magnificPopup.open({
     items: {
-      src: $('#update_list_form'),
+      src: $('#update_list_members_form'),
       type: 'inline'
     }
   });
 }
 
-function load_trade_detail($stock_num) {
+function load_trade_detail(stock_num) {
+   $.post("ajax_service.php", {'method':'loadTradeDetail', 'stock_num':stock_num})
+   .done(function(data){
+      $("#trade_detail").html(data);
+   });
+  console.log($('#trade_detail'));
   $.magnificPopup.open({
     items: {
-      src: $('#update_list_form'),
+      src: $('#trade_detail'),
       type: 'inline'
     }
   });

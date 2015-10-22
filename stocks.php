@@ -29,7 +29,7 @@ $values = getValuesInCurrList();
       $total_value += $value * $amount;
   ?>
   <tr>
-    <td><a href="#" onclick="load_trade_detail(".$stock["stock_num"].")"><?=$stock["stock_name"]?></a></td>
+    <td><a href="#" onclick="load_trade_detail('<?=$stock["stock_num"]?>')"><?=$stock["stock_name"]?></a></td>
     <td><?=$price?></td>
     <td><?=$value?></td>
     <td><?=$amount?></td>
@@ -37,7 +37,7 @@ $values = getValuesInCurrList();
   </tr>
   <?php } ?>
   <tr>
-    <td></td>
+    <td>total roi</td>
     <td></td>
     <td></td>
     <td></td>

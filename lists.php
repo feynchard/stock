@@ -1,6 +1,6 @@
 <select onchange="changeList(this.value)">
   <?php
-    global $curr_list;
+    $curr_list = $_SESSION["curr_list"];
     $lists = getAllLists();
     foreach($lists as $list) { 
       $list_name = $list[0];

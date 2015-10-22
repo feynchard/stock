@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,14 +21,16 @@
 <?php 
   require "lists.php";
   require "stocks.php";
+  require "update_list_members_form.php";
 ?>
 </div>
 <div>
-<button type="button" value="update list" onclick="update_list()" />
+<input type="button" value="update list" onclick="updateListMembers()" />
 </div>
 <?php 
-  require "form.php" 
+  require "stock_form.php";
 ?>
+<div id="trade_detail" class="mfp-hide"></div>
 </body>
 <html>
 

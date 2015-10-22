@@ -1,8 +1,12 @@
 <?php
 // stocks.csv file format: stock_num, buy_date, sale_date, price, number
 // lists.csv file format: name, member
+session_start(); 
+if(!isset($_SESSION["curr_list"])) {
+  $_SESSION["curr_list"] = "All";
+}
 
-$curr_list = "All";
+$view_stock = "";
 
 function addStock($stock_num, $stock_name) {
   $stocks = openDataFile("stocks.csv", "a");
@@ -11,7 +15,8 @@ function addStock($stock_num, $stock_name) {
 }
 
 function addStockData($data){
-  global $curr_list;
+  session_start(); 
+  $curr_list = $_SESSION["curr_list"];
   $stock_data = openDataFile("stock_data.csv", "a");
   fwrite($stock_data, implode(", ", [$data["stock_num"], $data["buy_date"], $data["sale_date"], $data["price"], $data["amount"]]));
   fwrite($stock_data, PHP_EOL);
@@ -20,8 +25,8 @@ function addStockData($data){
 }
 
 function changeCurrList($list_name) {
-  global $curr_list;
-  $curr_list = $list_name;
+  session_start(); 
+  $_SESSION["curr_list"] = $list_name;
 }
 
 function addList($list_name){
@@ -45,11 +50,17 @@ function addListMember($list_name, $member) {
   $i = $lists[$list_name][1];
   if($i && !in_array($member, explode("|", $i))) {
     $lists[$list_name][1] = $i."|".$member;
-  }else{
+  }elseif(!$i){
     $lists[$list_name][1] = $member;
   }
   
   putArrayIntoListsCsvFile($lists);
+}
+
+function updateCurrListMembers($members) {
+  session_start();
+  $curr_list = $_SESSION["curr_list"];
+  updateListMembers($curr_list, $members);
 }
 
 function updateListMembers($list_name, $members) {
@@ -144,8 +155,13 @@ function getMembers($list_name) {
 }
 
 function getStocksInCurrList() {
-  global $curr_list;
-  $members = getMembers($curr_list);
+  session_start(); 
+  $curr_list = $_SESSION["curr_list"];
+  return getStocks($curr_list);
+}
+
+function getStocks($list_name) {
+  $members = getMembers($list_name);
   if(empty($members)) return array();
 
   $file = openDataFile("stocks.csv", "r");
@@ -163,7 +179,8 @@ function getStocksInCurrList() {
 }
 
 function getPricesInCurrList() {
-  global $curr_list;
+  session_start(); 
+  $curr_list = $_SESSION["curr_list"];
   $members = getMembers($curr_list);
   if(empty($members)) return array();
 
@@ -197,7 +214,8 @@ function getPricesInCurrList() {
 }
 
 function getAmountsInCurrList() {
-  global $curr_list;
+  session_start();
+  $curr_list = $_SESSION["curr_list"];
   $members = getMembers($curr_list);
   if(empty($members)) return array();
 
@@ -225,7 +243,8 @@ function getAmountsInCurrList() {
 
 
 function getValuesInCurrList() {
-  global $curr_list;
+  session_start();
+  $curr_list = $_SESSION["curr_list"];
   $members = getMembers($curr_list);
   if(empty($members)) return array();
 
@@ -235,6 +254,30 @@ function getValuesInCurrList() {
   }
   
   return $values;
+}
+
+function setViewStock($stock_num) {
+   global $view_stock;
+   $view_stock = $stock_num;
+}
+
+function loadTradeDetail() {
+  global $view_stock;
+  $file = openDataFile("stock_data.csv", "r");
+  $stock_datas = csvFileToArray($file);
+  fclose($file);
+
+  $trade_details = array();
+  foreach($stock_datas as $stock_data) {
+    if(array_key_exists($stock_data[0], $trade_details)) {
+      $trade_details[$stock_data[0]][] = $stock_data; 
+    }else{
+      $trade_details[$stock_data[0]] = array();
+      $trade_details[$stock_data[0]][] = $stock_data; 
+    }
+  }
+ 
+  return $trade_details[$view_stock];
 }
 
 ?>

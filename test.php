@@ -21,5 +21,5 @@ function testGetAllLists(){
   fclose($file); 
 }
 
-print_r(getMembers("All"));
+updateListMembers("Ya", array(1111, 2222, 3333));
 ?>
